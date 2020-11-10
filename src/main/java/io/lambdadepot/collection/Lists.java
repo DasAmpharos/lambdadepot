@@ -16,18 +16,17 @@
 
 package io.lambdadepot.collection;
 
-import io.lambdadepot.function.Function1;
-import io.lambdadepot.util.Predicates;
+import io.lambdadepot.util.Option;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A collection of methods to assist operating on {@link java.util.List}s
@@ -42,19 +41,20 @@ public final class Lists {
      * Returns a list consisting of the results of applying the given
      * function to the elements of this list.
      *
-     * @param mapper function to be applied
+     * @param list   the list to map
+     * @param mapper mapping function to apply to each element
      * @param <T>    source type
      * @param <R>    result type
      * @return {@link List} of mapped result type
+     * @throws NullPointerException if {@code list} or {@code mapper} is {@literal null}
      */
-    public static <T, R> Function1<List<T>, List<R>> map(Function<? super T, ? extends R> mapper) {
+    @NonNull
+    public static <T, R> List<R> map(@NonNull List<T> list, @NonNull Function<? super T, ? extends R> mapper) {
+        Objects.requireNonNull(list, "list");
         Objects.requireNonNull(mapper, "mapper");
-        return list -> {
-            Objects.requireNonNull(list, "list");
-            return list.stream()
-                .map(mapper)
-                .collect(Collectors.toList());
-        };
+        final List<R> newList = new ArrayList<>(list.size());
+        list.forEach(it -> newList.add(mapper.apply(it)));
+        return newList;
     }
 
     /**
@@ -62,63 +62,57 @@ public final class Lists {
      * this list with the contents of a mapped list produced by applying
      * the provided mapping function to each element.
      *
+     * @param list   the list to flatMap
      * @param mapper function to be applied
      * @param <T>    source type
      * @param <R>    result type
      * @return {@link List} of mapped result types
+     * @throws NullPointerException if {@code list} or {@code mapper} is null
      */
-    public static <T, R> Function1<List<T>, List<R>> flatMap(Function<? super T, List<? extends R>> mapper) {
+    @NonNull
+    public static <T, R> List<R> flatMap(@NonNull List<T> list, @NonNull Function<? super T, List<? extends R>> mapper) {
+        Objects.requireNonNull(list, "list");
         Objects.requireNonNull(mapper, "mapper");
-        return list -> {
-            Objects.requireNonNull(list, "list");
-            return list.stream()
-                .map(mapper)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-        };
+        final List<R> newList = new LinkedList<>();
+        list.forEach(it -> newList.addAll(mapper.apply(it)));
+        return new ArrayList<>(newList);
     }
 
     /**
      * Filters out any Objects in the list that do not return true from the {@code predicate} test.
      *
-     * @param predicate Supplied {@link Predicate} used to filter Objects in the list
-     * @param <T>       type
+     * @param list      the list to filter
+     * @param predicate supplied {@link Predicate} used to filter Objects in the list
+     * @param <T>       source type
      * @return {@link List} of T that test true from the supplied {@code predicate}.
-     * @throws NullPointerException if the {@code predicate} is null or if the applied list is null.
-     *                              <ul>
-     *                              <li>Ex. filterOnList(myValidPredicate).apply(null) = NPE</li>
-     *                              <li>Ex. filterOnList(null).apply(notNullList) = NPE</li>
-     *                              <li>Ex. filterOnList(null).apply(null) = NPE</li>
-     *                              </ul>
+     * @throws NullPointerException if {@code list} or {@code predicate} is {@literal null}.
      */
-    public static <T> Function1<List<T>, List<T>> filter(Predicate<? super T> predicate) {
+    @NonNull
+    public static <T> List<T> filter(@NonNull List<T> list, @NonNull Predicate<? super T> predicate) {
         Objects.requireNonNull(predicate, "predicate");
-        return list -> {
-            Objects.requireNonNull(list, "list");
-            return list.stream()
-                .filter(predicate)
-                .collect(Collectors.toList());
-        };
+        Objects.requireNonNull(list, "list");
+        final LinkedList<T> filtered = new LinkedList<>();
+        list.forEach(it -> {
+            if (predicate.test(it)) {
+                filtered.add(it);
+            }
+        });
+        return new ArrayList<>(filtered);
     }
 
     /**
-     * Attempts to get the first {@code T} from the {@code List<T>}.
-     * A null input list is acceptable, and will just return empty.
-     * <ul>
-     * <li>getFirst(null) = Optional.empty()</li>
-     * <li>getFirst(new ArrayList()) = Optional.empty()</li>
-     * <li>getFirst(listOfNullTees) = Optional.empty()</li>
-     * <li>getFirst(listOfNonNullTees) = Optional.of(teeFromIndexZero)</li>
-     * </ul>
+     * Returns the element at index 0 in {@code list}.
+     * If {@code list.isEmpty()} returns {@literal true}, then
+     * {@code Option.empty()} is returned.
      *
-     * @param list for getting {@code List::get(0)}
+     * @param list the list to get the head element from
      * @param <T>  type of elements in the list
-     * @return {@code Optional#of(T)} or {@code Optional#empty()}
+     * @return {@code Option#of(T)} or {@code Optional#empty()}
+     * @throws NullPointerException if {@code list} is {@literal null}
      */
-    public static <T> Optional<T> getHead(List<T> list) {
-        return Optional.ofNullable(list)
-            .filter(Predicates.not(List::isEmpty))
-            .map(l -> l.get(0));
+    @NonNull
+    public static <T> Option<T> getHead(@NonNull List<T> list) {
+        return get(list, 0);
     }
 
     /**
@@ -135,10 +129,9 @@ public final class Lists {
      * @param <T>  type of elements in the list
      * @return {@code Optional#of(T)} or {@code Optional#empty()}
      */
-    public static <T> Optional<T> getTail(List<T> list) {
-        return Optional.ofNullable(list)
-            .filter(Predicates.not(List::isEmpty))
-            .map(l -> l.get(l.size() - 1));
+    @NonNull
+    public static <T> Option<T> getTail(@NonNull List<T> list) {
+        return get(list, list.size() - 1);
     }
 
     /**
@@ -156,10 +149,12 @@ public final class Lists {
      * @param <T>   type of elements in the list
      * @return {@code Optional#of(T)} or {@code Optional#empty()}
      */
-    public static <T> Optional<T> get(List<T> list, int index) {
-        return Optional.ofNullable(list)
-            .filter(l -> l.size() > index)
-            .map(l -> l.get(index));
+    @NonNull
+    public static <T> Option<T> get(@NonNull List<T> list, @NonNegative int index) {
+        if (list.isEmpty() || index >= list.size()) {
+            return Option.empty();
+        }
+        return Option.of(list.get(index));
     }
 
     /**
@@ -171,9 +166,10 @@ public final class Lists {
      * @param <T>      element type
      * @return a function that appends the given elements to a list
      */
+    @NonNull
     @SafeVarargs
-    public static <T> Function1<List<T>, List<T>> append(T... elements) {
-        return append(Arrays.asList(elements));
+    public static <T> List<T> append(@NonNull List<T> list, T... elements) {
+        return append(list, Arrays.asList(elements));
     }
 
     /**
@@ -185,14 +181,13 @@ public final class Lists {
      * @param <T>      element type
      * @return a function that appends the given elements to a list
      */
-    public static <T> Function1<List<T>, List<T>> append(Collection<T> elements) {
+    @NonNull
+    public static <T> List<T> append(@NonNull List<T> list, @NonNull Collection<T> elements) {
         Objects.requireNonNull(elements, "elements");
-        return list -> {
-            Objects.requireNonNull(list, "list");
-            List<T> newList = new ArrayList<>(list);
-            newList.addAll(elements);
-            return Collections.unmodifiableList(newList);
-        };
+        Objects.requireNonNull(list, "list");
+        final List<T> newList = new ArrayList<>(list);
+        newList.addAll(elements);
+        return newList;
     }
 
     /**
@@ -204,9 +199,10 @@ public final class Lists {
      * @param <T>      element type
      * @return a function that prepends the given elements to a list
      */
+    @NonNull
     @SafeVarargs
-    public static <T> Function1<List<T>, List<T>> prepend(T... elements) {
-        return prepend(Arrays.asList(elements));
+    public static <T> List<T> prepend(@NonNull List<T> list, T... elements) {
+        return prepend(list, Arrays.asList(elements));
     }
 
     /**
@@ -218,13 +214,12 @@ public final class Lists {
      * @param <T>      element type
      * @return a function that prepends the given elements to a list
      */
-    public static <T> Function1<List<T>, List<T>> prepend(Collection<T> elements) {
+    @NonNull
+    public static <T> List<T> prepend(@NonNull List<T> list, @NonNull Collection<T> elements) {
+        Objects.requireNonNull(list, "list");
         Objects.requireNonNull(elements, "elements");
-        return list -> {
-            Objects.requireNonNull(list, "list");
-            List<T> newList = new ArrayList<>(list);
-            newList.addAll(0, elements);
-            return Collections.unmodifiableList(newList);
-        };
+        final List<T> newList = new ArrayList<>(list);
+        newList.addAll(0, elements);
+        return newList;
     }
 }

@@ -18,6 +18,7 @@ package io.lambdadepot.function;
 
 import java.util.Objects;
 import java.util.function.Consumer;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Represents an operation that accepts a single input argument and returns no
@@ -38,11 +39,12 @@ public interface Consumer1<T1> extends Consumer<T1> {
      * Gets a method reference/lambda expression as a Consumer1 instance.
      *
      * @param reference Consumer reference
-     * @param <T1>       the type of the input to the operation
+     * @param <T1>      the type of the input to the operation
      * @return method reference/lambda expression as a Consumer1 instance
      * @throws NullPointerException if reference is null
      */
-    static <T1> Consumer1<T1> of(Consumer1<T1> reference) {
+    @NonNull
+    static <T1> Consumer1<T1> of(@NonNull Consumer1<T1> reference) {
         Objects.requireNonNull(reference, "reference");
         return reference;
     }
@@ -53,7 +55,7 @@ public interface Consumer1<T1> extends Consumer<T1> {
      * <p>Provides interop with existing Consumer instances.
      *
      * @param consumer the Consumer instance to convert
-     * @param <T1>      the type of the input to the operation
+     * @param <T1>     the type of the input to the operation
      * @return consumer as a Consumer1 instance
      * @throws NullPointerException if consumer is null
      */
@@ -84,8 +86,9 @@ public interface Consumer1<T1> extends Consumer<T1> {
      * operation followed by the {@code after} operation
      * @throws NullPointerException if {@code after} is null
      */
+    @NonNull
     @Override
-    default Consumer1<T1> andThen(Consumer<? super T1> after) {
+    default Consumer1<T1> andThen(@NonNull Consumer<? super T1> after) {
         Objects.requireNonNull(after, "after");
         return t -> {
             accept(t);

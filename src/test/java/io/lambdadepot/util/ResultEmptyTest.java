@@ -174,7 +174,7 @@ class ResultEmptyTest {
     @Test
     void ifSuccessOrFailure() {
         List<String> strings = new ArrayList<>();
-        EMPTY_STRING.ifSuccessOrFailure(strings::add, t -> strings.add(t.getMessage()));
+        EMPTY_STRING.ifSuccessOrElse(strings::add, t -> strings.add(t.getMessage()));
         assertTrue(strings::isEmpty);
     }
 
@@ -239,7 +239,7 @@ class ResultEmptyTest {
 
     @Test
     void getError() {
-        assertThrows(NoSuchElementException.class, () -> EMPTY_INT.getError());
+        assertThrows(NoSuchElementException.class, () -> EMPTY_INT.getException());
     }
 
     @Test

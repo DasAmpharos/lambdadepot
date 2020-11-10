@@ -41,8 +41,8 @@ public interface Consumer2<T1, T2> extends BiConsumer<T1, T2> {
      * Gets a method reference/lambda expression as a Consumer2 instance.
      *
      * @param reference Consumer reference
-     * @param <T1>       the type of the first input to the operation
-     * @param <T2>       the type of the second input to the operation
+     * @param <T1>      the type of the first input to the operation
+     * @param <T2>      the type of the second input to the operation
      * @return method reference/lambda expression as a Consumer2 instance
      * @throws NullPointerException if reference is null
      */
@@ -57,8 +57,8 @@ public interface Consumer2<T1, T2> extends BiConsumer<T1, T2> {
      * <p>Provides interop with existing BiConsumer instances.
      *
      * @param consumer the BiConsumer instance to convert
-     * @param <T1>      the type of the first input to the operation
-     * @param <T2>      the type of the second input to the operation
+     * @param <T1>     the type of the first input to the operation
+     * @param <T2>     the type of the second input to the operation
      * @return consumer as a Consumer2 instance
      * @throws NullPointerException if consumer is null
      */

@@ -485,7 +485,7 @@ public final class Predicates {
         Objects.requireNonNull(predicate, "predicate");
         return in -> getter.get(in)
             .map(predicate::test)
-            .orElse(defaultValue);
+            .getOrElse(defaultValue);
     }
 
     /**

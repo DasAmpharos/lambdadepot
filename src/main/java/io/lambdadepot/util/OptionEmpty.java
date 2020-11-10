@@ -35,47 +35,74 @@ final class OptionEmpty<T> extends Option<T> {
     private OptionEmpty() {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<T> toOptional() {
         return Optional.empty();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <U> Option<U> map(Function<T, U> mapper) {
         return empty();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <U> Option<U> flatMap(Function<T, Option<U>> mapper) {
         return empty();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Option<T> filter(Predicate<T> predicate) {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void ifPresent(Consumer<T> whenPresent) {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void ifPresentOrElse(Consumer<T> whenPresent, Runnable whenEmpty) {
         Objects.requireNonNull(whenEmpty, "whenEmpty");
         whenEmpty.run();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void ifEmpty(Runnable whenEmpty) {
         Objects.requireNonNull(whenEmpty, "whenEmpty");
         whenEmpty.run();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Option<T> peekIfPresent(Consumer<? super T> whenPresent) {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Option<T> peekIfPresentOrElse(Consumer<? super T> whenPresent, Runnable whenEmpty) {
         Objects.requireNonNull(whenEmpty, "whenEmpty");
@@ -83,6 +110,9 @@ final class OptionEmpty<T> extends Option<T> {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Option<T> peekIfEmpty(Runnable whenEmpty) {
         Objects.requireNonNull(whenEmpty, "whenEmpty");
@@ -90,40 +120,87 @@ final class OptionEmpty<T> extends Option<T> {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isPresent() {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isEmpty() {
         return true;
     }
 
-    @Override
-    public T orElse(T other) {
-        return other;
-    }
-
-    @Override
-    public T orElseGet(Supplier<? extends T> other) {
-        Objects.requireNonNull(other, "other");
-        return other.get();
-    }
-
-    @Override
-    public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
-        Objects.requireNonNull(exceptionSupplier, "exceptionSupplier");
-        throw exceptionSupplier.get();
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Stream<T> stream() {
         return Stream.empty();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public T get() {
         throw new NoSuchElementException("No value present");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public T getOrElse(T other) {
+        return other;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public T getOrElse(Supplier<? extends T> other) {
+        Objects.requireNonNull(other, "other");
+        return other.get();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public T getOrNull() {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <X extends Throwable> T getOrElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
+        Objects.requireNonNull(exceptionSupplier, "exceptionSupplier");
+        throw exceptionSupplier.get();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Option<T> orElse(Option<? extends T> other) {
+        Objects.requireNonNull(other, "other");
+        return (Option<T>) other;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Option<T> orElse(Supplier<? extends Option<? extends T>> other) {
+        Objects.requireNonNull(other, "other");
+        return (Option<T>) Objects.requireNonNull(other.get(), "other#get");
     }
 }

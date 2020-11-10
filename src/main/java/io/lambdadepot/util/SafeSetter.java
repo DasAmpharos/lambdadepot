@@ -17,16 +17,16 @@
 package io.lambdadepot.util;
 
 import java.util.function.BiConsumer;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A null-safe, reusable property setter.
  *
- * @param <I>    the input object type
- * @param <O>   the output property type
+ * @param <I> the input object type
+ * @param <O> the output property type
  * @param <V> the value property type
  */
 public final class SafeSetter<I, O, V> {
-
     /**
      * Getter implementation.
      */
@@ -52,11 +52,11 @@ public final class SafeSetter<I, O, V> {
      * Executes the safe access chain to extract the target property from {@code in}
      * and attempts to set {@code value} if the target property is safe to access.
      *
-     * @param i    the input object
+     * @param i the input object
      * @param v the new value
      * @return {@code true} if the property was set; {@code false} otherwise
      */
-    public boolean set(I i, V v) {
+    public boolean set(@Nullable I i, @Nullable V v) {
         Option<O> out = getter.get(i);
         out.ifPresent(o -> setter.accept(o, v));
         return out.isPresent();

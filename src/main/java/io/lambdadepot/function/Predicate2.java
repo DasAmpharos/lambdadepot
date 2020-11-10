@@ -39,8 +39,8 @@ public interface Predicate2<T1, T2> extends BiPredicate<T1, T2> {
      * Gets a method reference/lambda expression as a Predicate2 instance.
      *
      * @param reference Predicate reference
-     * @param <T1>       the type of the input to the predicate
-     * @param <T2>       the type of the second argument to the predicate
+     * @param <T1>      the type of the input to the predicate
+     * @param <T2>      the type of the second argument to the predicate
      * @return method reference/lambda expression as a Predicate2 instance
      * @throws NullPointerException if reference is null
      */
@@ -55,8 +55,8 @@ public interface Predicate2<T1, T2> extends BiPredicate<T1, T2> {
      * <p>Provides interop with existing BiPredicate instances.
      *
      * @param predicate the BiPredicate instance to convert
-     * @param <T1>       the type of the first argument to the predicate
-     * @param <T2>       the type of the second argument the predicate
+     * @param <T1>      the type of the first argument to the predicate
+     * @param <T2>      the type of the second argument the predicate
      * @return {@code predicate} as a Predicate2 instance
      * @throws NullPointerException if predicate is null
      */

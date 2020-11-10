@@ -41,7 +41,7 @@ class ResultFailureTest {
     void flatMap() {
         Result<Integer> result = FAILED_NUMBER.flatMap(i -> Result.success(i));
         assertTrue(result.isFailure());
-        assertTrue(result.getError() instanceof NumberFormatException);
+        assertTrue(result.getException() instanceof NumberFormatException);
         assertThrows(NoSuchElementException.class, () -> result.getValue());
     }
 
@@ -55,19 +55,19 @@ class ResultFailureTest {
     @Test
     void ifFailureMap() {
         Result<Integer> result = FAILED_NUMBER.ifFailureMap(t -> new IllegalArgumentException());
-        assertTrue(result.getError() instanceof IllegalArgumentException);
+        assertTrue(result.getException() instanceof IllegalArgumentException);
     }
 
     @Test
     void testIfFailureMap() {
         Result<Integer> result = FAILED_NUMBER.ifFailureMap(NumberFormatException.class, t -> new IllegalArgumentException());
-        assertTrue(result.getError() instanceof IllegalArgumentException);
+        assertTrue(result.getException() instanceof IllegalArgumentException);
     }
 
     @Test
     void testIfFailureMap1() {
         Result<Integer> result = FAILED_NUMBER.ifFailureMap(instanceOf(NumberFormatException.class), t -> new IllegalArgumentException());
-        assertTrue(result.getError() instanceof IllegalArgumentException);
+        assertTrue(result.getException() instanceof IllegalArgumentException);
     }
 
     @Test
@@ -189,7 +189,7 @@ class ResultFailureTest {
     @Test
     void ifSuccessOrFailure() {
         List<Integer> list = new ArrayList<>();
-        FAILED_NUMBER.ifSuccessOrFailure(list::add, t -> list.add(-1));
+        FAILED_NUMBER.ifSuccessOrElse(list::add, t -> list.add(-1));
         assertFalse(list::isEmpty);
         assertEquals(1, list.size());
         assertEquals(-1, list.get(0));
@@ -258,7 +258,7 @@ class ResultFailureTest {
 
     @Test
     void getError() {
-        assertTrue(FAILED_NUMBER.getError() instanceof NumberFormatException);
+        assertTrue(FAILED_NUMBER.getException() instanceof NumberFormatException);
     }
 
     @Test

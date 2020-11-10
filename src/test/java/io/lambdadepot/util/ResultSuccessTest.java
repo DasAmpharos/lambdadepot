@@ -266,14 +266,14 @@ class ResultSuccessTest {
 
         List<Integer> integers = new ArrayList<>();
         List<Throwable> throwables = new ArrayList<>();
-        Result.success(10).ifSuccessOrFailure(integers::add, throwables::add);
+        Result.success(10).ifSuccessOrElse(integers::add, throwables::add);
         assertFalse(integers::isEmpty);
         assertTrue(integers.contains(10));
         assertTrue(throwables::isEmpty);
         assertThrows(NullPointerException.class, () -> {
             Consumer<Integer> integerConsumer = null;
             Consumer<Throwable> throwableConsumer = null;
-            Result.success(10).ifSuccessOrFailure(integerConsumer, throwableConsumer);
+            Result.success(10).ifSuccessOrElse(integerConsumer, throwableConsumer);
         });
     }
 
@@ -364,7 +364,7 @@ class ResultSuccessTest {
 
     @Test
     void getError() {
-        assertThrows(NoSuchElementException.class, () -> Result.success(10).getError());
+        assertThrows(NoSuchElementException.class, () -> Result.success(10).getException());
     }
 
     @Test

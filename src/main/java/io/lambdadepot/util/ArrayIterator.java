@@ -17,6 +17,7 @@
 package io.lambdadepot.util;
 
 import java.util.Iterator;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Simple iterator implementation backed by an array.
@@ -45,6 +46,7 @@ public final class ArrayIterator<T> implements Iterator<T> {
      * @param <T>      the array element type
      * @return a new {@link Iterator} that iterates over the given elements
      */
+    @NonNull
     @SafeVarargs
     public static <T> Iterator<T> of(T... elements) {
         return new ArrayIterator<>(elements);

@@ -20,12 +20,17 @@ import io.lambdadepot.function.Function1;
 import io.lambdadepot.util.ArrayIterator;
 import java.util.Iterator;
 import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A tuple with one component.
  *
  * @param <T1> the type of {@code t1}
  */
+@ToString
+@EqualsAndHashCode
 @SuppressWarnings({"unused", "WeakerAccess"})
 public final class Tuple1<T1> implements Iterable<Object> {
     /**
@@ -57,39 +62,7 @@ public final class Tuple1<T1> implements Iterable<Object> {
     /**
      * {@inheritDoc}
      */
-    @Override
-    public String toString() {
-        return "Tuple1{"
-            + "t1=" + t1
-            + '}';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        } else if (o == null || getClass() != o.getClass()) {
-            return false;
-        } else {
-            Tuple1<?> tuple1 = (Tuple1<?>) o;
-            return Objects.equals(t1, tuple1.t1);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(t1);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
+    @NonNull
     @Override
     public Iterator<Object> iterator() {
         return ArrayIterator.of(t1);
@@ -105,7 +78,8 @@ public final class Tuple1<T1> implements Iterable<Object> {
      * as the {@code t1} component
      * @throws NullPointerException if {@code mapper} is null
      */
-    public <O> Tuple1<O> mapT1(Function1<T1, O> mapper) {
+    @NonNull
+    public <O> Tuple1<O> mapT1(@NonNull Function1<T1, O> mapper) {
         Objects.requireNonNull(mapper, "mapper");
         return new Tuple1<>(mapper.apply(t1));
     }

@@ -17,6 +17,8 @@
 package io.lambdadepot.function;
 
 import java.util.Objects;
+import java.util.Optional;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Represents an operation that accepts zero input argument and returns no
@@ -39,7 +41,8 @@ public interface Consumer0 {
      * @return method reference/lambda expression as a Consumer0 instance
      * @throws NullPointerException if reference is null
      */
-    static Consumer0 of(Consumer0 reference) {
+    @NonNull
+    static Consumer0 of(@NonNull Consumer0 reference) {
         Objects.requireNonNull(reference, "reference");
         return reference;
     }
@@ -61,7 +64,8 @@ public interface Consumer0 {
      * operation followed by the {@code after} operation
      * @throws NullPointerException if {@code after} is null
      */
-    default Consumer0 andThen(Consumer0 after) {
+    @NonNull
+    default Consumer0 andThen(@NonNull Consumer0 after) {
         Objects.requireNonNull(after, "after");
         return () -> {
             accept();

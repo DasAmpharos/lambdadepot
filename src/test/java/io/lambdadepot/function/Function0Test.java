@@ -60,7 +60,7 @@ class Function0Test {
         Function0<String> empty = () -> null;
         Assertions.assertEquals("hello, world", testFunction.lift().apply().getValue());
         assertTrue(error.lift().apply() instanceof ResultFailure);
-        assertTrue(error.lift().apply().getError() instanceof IllegalStateException);
+        assertTrue(error.lift().apply().getException() instanceof IllegalStateException);
         Assertions.assertEquals(Result.empty(), empty.lift().apply());
     }
 }

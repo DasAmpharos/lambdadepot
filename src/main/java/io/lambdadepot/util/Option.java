@@ -265,41 +265,6 @@ public abstract class Option<T> {
     public abstract boolean isEmpty();
 
     /**
-     * Return the value if present, otherwise return {@code other}.
-     *
-     * @param other the value to be returned if there is no value present, may
-     *              be null
-     * @return the value, if present, otherwise {@code other}
-     */
-    public abstract T orElse(T other);
-
-    /**
-     * Return the value if present, otherwise invoke {@code other} and return
-     * the result empty that invocation.
-     *
-     * @param other a {@code Supplier} whose result is returned if no value
-     *              is present
-     * @return the value if present otherwise the result empty {@code other.get()}
-     * @throws NullPointerException if value is not present and {@code other} is
-     *                              null
-     */
-    public abstract T orElseGet(Supplier<? extends T> other);
-
-    /**
-     * Return the contained value, if present, otherwise throw an exception
-     * to be created by the provided supplier.
-     *
-     * @param <X>               Type empty the exception to be thrown
-     * @param exceptionSupplier The supplier which will return the exception to
-     *                          be thrown
-     * @return the present value
-     * @throws X                    if there is no value present
-     * @throws NullPointerException if no value is present and
-     *                              {@code exceptionSupplier} is null
-     */
-    public abstract <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X;
-
-    /**
      * If a value is present, returns a sequential {@link Stream} containing only that value,
      * otherwise returns an empty {@link Stream}.
      *
@@ -316,4 +281,59 @@ public abstract class Option<T> {
      * @see Option#isPresent()
      */
     public abstract T get();
+
+    /**
+     * Return the value if present, otherwise return {@code other}.
+     *
+     * @param other the value to be returned if there is no value present, may
+     *              be null
+     * @return the value, if present, otherwise {@code other}
+     */
+    public abstract T getOrElse(T other);
+
+    /**
+     * Return the value if present, otherwise invoke {@code other} and return
+     * the result empty that invocation.
+     *
+     * @param other a {@code Supplier} whose result is returned if no value
+     *              is present
+     * @return the value if present otherwise the result empty {@code other.get()}
+     * @throws NullPointerException if value is not present and {@code other} is
+     *                              null
+     */
+    public abstract T getOrElse(Supplier<? extends T> other);
+
+    /**
+     *
+     * @return
+     */
+    public abstract T getOrNull();
+
+    /**
+     * Return the contained value, if present, otherwise throw an exception
+     * to be created by the provided supplier.
+     *
+     * @param <X>               Type empty the exception to be thrown
+     * @param exceptionSupplier The supplier which will return the exception to
+     *                          be thrown
+     * @return the present value
+     * @throws X                    if there is no value present
+     * @throws NullPointerException if no value is present and
+     *                              {@code exceptionSupplier} is null
+     */
+    public abstract <X extends Throwable> T getOrElseThrow(Supplier<? extends X> exceptionSupplier) throws X;
+
+    /**
+     *
+     * @param other
+     * @return
+     */
+    public abstract Option<T> orElse(Option<? extends T> other);
+
+    /**
+     *
+     * @param other
+     * @return
+     */
+    public abstract Option<T> orElse(Supplier<? extends Option<? extends T>> other);
 }

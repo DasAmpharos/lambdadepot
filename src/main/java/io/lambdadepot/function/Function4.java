@@ -164,7 +164,7 @@ public interface Function4<T1, T2, T3, T4, R> {
     default Function4<T1, T2, T3, T4, Result<R>> lift() {
         return (t1, t2, t3, t4) -> {
             try {
-                return Result.successOrEmpty(apply(t1, t2, t3, t4));
+                return Result.success(apply(t1, t2, t3, t4));
             } catch (Exception e) {
                 return Result.failure(e);
             }

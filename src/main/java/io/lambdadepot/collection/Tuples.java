@@ -16,6 +16,8 @@
 
 package io.lambdadepot.collection;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 /**
  * Helper class that contains factory methods for all tuple variants.
  */
@@ -29,6 +31,7 @@ public final class Tuples {
      *
      * @return {@link Tuple0#empty()}
      */
+    @NonNull
     public static Tuple0 of() {
         return Tuple0.empty();
     }
@@ -41,6 +44,7 @@ public final class Tuples {
      * @param <T1> the first component type
      * @return {@link Tuple1#of(Object)}
      */
+    @NonNull
     public static <T1> Tuple1<T1> of(T1 t1) {
         return Tuple1.of(t1);
     }
@@ -56,6 +60,7 @@ public final class Tuples {
      * @param <T2> the type of {@code t2}
      * @return {@link Tuple2#of(Object, Object)}
      */
+    @NonNull
     public static <T1, T2> Tuple2<T1, T2> of(T1 t1, T2 t2) {
         return Tuple2.of(t1, t2);
     }
@@ -73,6 +78,7 @@ public final class Tuples {
      * @param <T3> the type of {@code t3}
      * @return {@link Tuple3#of(Object, Object, Object)}
      */
+    @NonNull
     public static <T1, T2, T3> Tuple3<T1, T2, T3> of(T1 t1, T2 t2, T3 t3) {
         return Tuple3.of(t1, t2, t3);
     }
@@ -93,6 +99,7 @@ public final class Tuples {
      * @param <T4> the type of {@code t4}
      * @return {@link Tuple4#of(Object, Object, Object, Object)}
      */
+    @NonNull
     public static <T1, T2, T3, T4> Tuple4<T1, T2, T3, T4> of(T1 t1, T2 t2, T3 t3, T4 t4) {
         return Tuple4.of(t1, t2, t3, t4);
     }

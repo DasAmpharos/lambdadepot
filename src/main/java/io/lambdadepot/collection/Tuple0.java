@@ -18,6 +18,7 @@ package io.lambdadepot.collection;
 
 import java.util.Objects;
 import java.util.function.Function;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A tuple with zero components.
@@ -54,7 +55,7 @@ public final class Tuple0 {
      * @return the output of {@code transformer}
      * @throws NullPointerException if {@code transformer} is null
      */
-    public <O> O transform(Function<Tuple0, O> transformer) {
+    public <O> O transform(@NonNull Function<Tuple0, O> transformer) {
         Objects.requireNonNull(transformer, "transformer");
         return transformer.apply(this);
     }

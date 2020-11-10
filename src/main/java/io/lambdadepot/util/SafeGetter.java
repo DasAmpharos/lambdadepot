@@ -20,15 +20,16 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A null-safe, reusable property getter.
  *
- * @param <I>  the input object type
+ * @param <I> the input object type
  * @param <O> the output property type
  */
 public final class SafeGetter<I, O> {
-
     /**
      * Getter implementation.
      */
@@ -46,13 +47,28 @@ public final class SafeGetter<I, O> {
     /**
      * {@code SafeGetter} factory method. This is the starting point to defining a {@code SafeGetter}.
      *
+     * @param type the input class type
+     * @param <T>  the input type
+     * @return a new {@code SafeGetter} that returns the input wrapped as {@link Option}
+     * @throws NullPointerException if {@code type} is null
+     */
+    @NonNull
+    public static <T> SafeGetter<T, T> of(Class<T> type) {
+        Objects.requireNonNull(type, "type");
+        return new SafeGetter<>(Option::ofNullable);
+    }
+
+    /**
+     * {@code SafeGetter} factory method. This is the starting point to defining a {@code SafeGetter}.
+     *
      * @param getter the initial getter implementation
-     * @param <I>   the input object type
-     * @param <O>  the output property type
+     * @param <I>    the input object type
+     * @param <O>    the output property type
      * @return a new {@code SafeGetter} using the given {@code getter} implementation
      * @throws NullPointerException if {@code getter} is null
      */
-    public static <I, O> SafeGetter<I, O> of(Function<I, O> getter) {
+    @NonNull
+    public static <I, O> SafeGetter<I, O> of(@NonNull Function<I, O> getter) {
         Objects.requireNonNull(getter, "getter");
         return new SafeGetter<>(i -> Option.ofNullable(i).map(getter));
     }
@@ -64,7 +80,8 @@ public final class SafeGetter<I, O> {
      * @return a {@code SafeGetter} that incorporates {@code filter}
      * @throws NullPointerException if {@code filter} is null
      */
-    public SafeGetter<I, O> when(Predicate<O> filter) {
+    @NonNull
+    public SafeGetter<I, O> when(@NonNull Predicate<O> filter) {
         Objects.requireNonNull(filter, "filter");
         return new SafeGetter<>(i -> this.getter.apply(i).filter(filter));
     }
@@ -72,13 +89,14 @@ public final class SafeGetter<I, O> {
     /**
      * Defines the next step in the property accessor chain.
      *
-     * @param nextGetter    the next getter implementation
-     * @param <U> the new output property type
+     * @param nextGetter the next getter implementation
+     * @param <U>        the new output property type
      * @return a {@code SafeGetter} that incorporates {@code nextGetter}
      * @throws NullPointerException if {@code nextGetter} is null
      * @see #then(SafeGetter)
      */
-    public <U> SafeGetter<I, U> then(Function<O, U> nextGetter) {
+    @NonNull
+    public <U> SafeGetter<I, U> then(@NonNull Function<O, U> nextGetter) {
         Objects.requireNonNull(nextGetter, "nextGetter");
         return new SafeGetter<>(i -> this.getter.apply(i).map(nextGetter));
     }
@@ -86,13 +104,14 @@ public final class SafeGetter<I, O> {
     /**
      * Defines the next step in the property accessor chain.
      *
-     * @param nextGetter    the next getter implementation
-     * @param <V> the new output property type
+     * @param nextGetter the next getter implementation
+     * @param <V>        the new output property type
      * @return a {@code SafeGetter} that incorporates {@code nextGetter}
      * @throws NullPointerException if {@code nextGetter} is null
      * @see #then(Function)
      */
-    public <V> SafeGetter<I, V> then(SafeGetter<O, V> nextGetter) {
+    @NonNull
+    public <V> SafeGetter<I, V> then(@NonNull SafeGetter<O, V> nextGetter) {
         Objects.requireNonNull(nextGetter, "nextGetter");
         return new SafeGetter<>(i -> this.getter.apply(i).flatMap(nextGetter::get));
     }
@@ -102,12 +121,13 @@ public final class SafeGetter<I, O> {
      * to get the {@code R} property type and sets the {@code U} property
      * type.
      *
-     * @param setter  the setter implementation
-     * @param <V> the value type to set
+     * @param setter the setter implementation
+     * @param <V>    the value type to set
      * @return a {@code SafeSetter}
      * @throws NullPointerException if {@code setter} is null
      */
-    public <V> SafeSetter<I, O, V> setWith(BiConsumer<O, V> setter) {
+    @NonNull
+    public <V> SafeSetter<I, O, V> setWith(@NonNull BiConsumer<O, V> setter) {
         Objects.requireNonNull(setter, "setter");
         return new SafeSetter<>(this, setter);
     }
@@ -122,9 +142,8 @@ public final class SafeGetter<I, O> {
      * the property is safe to access, then a present {@code Option} is returned. If the
      * property is not safe to access, then an empty {@code Option} is returned.
      */
-    public Option<O> get(I i) {
+    @NonNull
+    public Option<O> get(@Nullable I i) {
         return getter.apply(i);
     }
-
-
 }

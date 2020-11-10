@@ -1,8 +1,13 @@
 buildscript {
+    ext["versions"] = [
+        pitest: "1.4.6"
+    ]
     repositories {
         mavenCentral()
     }
-    dependencies { classpath("info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.6") }
+    dependencies {
+        classpath("info.solidsoft.gradle.pitest:gradle-pitest-plugin:${versions.pitest}")
+    }
 }
 
 apply plugin: "idea"
@@ -13,11 +18,25 @@ apply plugin: "info.solidsoft.pitest"
 apply plugin: "checkstyle"
 apply plugin: "jacoco"
 
-repositories {
-    mavenCentral()
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
 }
 
+ext["versions"] = [
+    checkerframework: "3.7.1",
+    lombok          : "1.18.12"
+]
+
 dependencies {
+    implementation("org.checkerframework:checker:${versions.checkerframework}")
+    implementation("org.checkerframework:checker-qual:${versions.checkerframework}")
+
+    compileOnly("org.projectlombok:lombok:${versions.lombok}")
+    annotationProcessor("org.projectlombok:lombok:${versions.lombok}")
+
     testImplementation "org.junit.jupiter:junit-jupiter:5.4.2"
     testImplementation "org.apache.commons:commons-lang3:3.8.1"
 }

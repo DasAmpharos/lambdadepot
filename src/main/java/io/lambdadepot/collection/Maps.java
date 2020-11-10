@@ -16,11 +16,12 @@
 
 package io.lambdadepot.collection;
 
-import io.lambdadepot.function.Function1;
+import io.lambdadepot.util.Option;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A collection of methods to assist operating on {@link java.util.Map}s
@@ -43,14 +44,14 @@ public final class Maps {
      * @return the value from the provided supplier if the key is not found in the map, or the value
      * for the key if it is contained in the map.
      */
-    public static <K, V> Function1<Map<K, V>, V> getOrPut(K key, Supplier<V> valueSupplier) {
+    public static <K, V> V getOrPut(@NonNull Map<K, V> map, @NonNull K key, @NonNull Supplier<V> valueSupplier) {
+        Objects.requireNonNull(map, "map");
+        Objects.requireNonNull(key, "key");
         Objects.requireNonNull(valueSupplier, "valueSupplier");
-        return map -> {
-            if (!map.containsKey(key)) {
-                map.put(key, valueSupplier.get());
-            }
-            return map.get(key);
-        };
+        if (!map.containsKey(key)) {
+            map.put(key, valueSupplier.get());
+        }
+        return map.get(key);
     }
 
     /**
@@ -63,10 +64,11 @@ public final class Maps {
      * @param <V>   value type
      * @return the value found related to the provided key 'if present' or the value from the provided supplier.
      */
-    public static <K, V> Function1<Map<K, V>, V> getOrDefault(K key, Supplier<V> other) {
+    public static <K, V> V getOrDefault(@NonNull Map<K, V> map, @NonNull K key, @NonNull Supplier<V> other) {
+        Objects.requireNonNull(map, "map");
         Objects.requireNonNull(key, "key");
         Objects.requireNonNull(other, "other");
-        return map -> map.containsKey(key) ? map.get(key) : other.get();
+        return map.containsKey(key) ? map.get(key) : other.get();
     }
 
     /**
@@ -80,11 +82,13 @@ public final class Maps {
      * @return {@link Optional#empty()} if the provided key is not found in the provided map or if the value for the
      * key is null, otherwise {@link Optional} of the value.
      */
-    public static <K, V> Optional<V> get(Map<K, V> map, K key) {
+    @NonNull
+    public static <K, V> Option<V> get(@NonNull Map<K, V> map, @NonNull K key) {
         Objects.requireNonNull(map, "map");
         Objects.requireNonNull(key, "key");
-        return Optional.of(key)
-            .filter(map::containsKey)
-            .map(map::get);
+        if (!map.containsKey(key)) {
+            return Option.empty();
+        }
+        return Option.of(map.get(key));
     }
 }

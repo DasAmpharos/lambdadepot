@@ -1,1 +1,3 @@
 rootProject.name = 'lambdadepot'
+
+include "lambdadepot-kotlin"

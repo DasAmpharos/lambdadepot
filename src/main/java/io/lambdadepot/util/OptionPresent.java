@@ -34,45 +34,69 @@ final class OptionPresent<T> extends Option<T> {
         this.value = Objects.requireNonNull(value, "value");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<T> toOptional() {
         return Optional.of(value);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <U> Option<U> map(Function<T, U> mapper) {
         Objects.requireNonNull(mapper, "mapper");
         return Option.ofNullable(mapper.apply(value));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <U> Option<U> flatMap(Function<T, Option<U>> mapper) {
         Objects.requireNonNull(mapper, "mapper");
         return mapper.apply(value);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Option<T> filter(Predicate<T> predicate) {
         Objects.requireNonNull(predicate, "predicate");
         return predicate.test(value) ? this : Option.empty();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void ifPresent(Consumer<T> whenPresent) {
         Objects.requireNonNull(whenPresent, "whenPresent");
         whenPresent.accept(value);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void ifPresentOrElse(Consumer<T> whenPresent, Runnable whenEmpty) {
         Objects.requireNonNull(whenPresent, "whenPresent");
         whenPresent.accept(value);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void ifEmpty(Runnable whenEmpty) {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Option<T> peekIfPresent(Consumer<? super T> whenPresent) {
         Objects.requireNonNull(whenPresent, "whenPresent");
@@ -80,48 +104,99 @@ final class OptionPresent<T> extends Option<T> {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Option<T> peekIfPresentOrElse(Consumer<? super T> whenPresent, Runnable whenEmpty) {
         return peekIfPresent(whenPresent);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Option<T> peekIfEmpty(Runnable whenEmpty) {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isPresent() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isEmpty() {
         return false;
     }
 
-    @Override
-    public T orElse(T other) {
-        return value;
-    }
-
-    @Override
-    public T orElseGet(Supplier<? extends T> other) {
-        return value;
-    }
-
-    @Override
-    public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
-        return value;
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Stream<T> stream() {
         return Stream.of(value);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public T get() {
         return value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public T getOrElse(T other) {
+        return value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public T getOrElse(Supplier<? extends T> other) {
+        return value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public T getOrNull() {
+        return value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <X extends Throwable> T getOrElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
+        return value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Option<T> orElse(Option<? extends T> other) {
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Option<T> orElse(Supplier<? extends Option<? extends T>> other) {
+        return this;
     }
 }

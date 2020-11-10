@@ -1,0 +1,26 @@
+buildscript {
+    ext["versions"] = [
+        kotlin: "1.4.10"
+    ]
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}")
+    }
+}
+
+apply plugin: "org.jetbrains.kotlin.jvm"
+
+dependencies {
+    implementation(rootProject)
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}")
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}

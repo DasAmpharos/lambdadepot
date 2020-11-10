@@ -123,7 +123,7 @@ public interface Function2<T1, T2, R> extends BiFunction<T1, T2, R> {
      * If evaluation of either function throws an exception, it is relayed to
      * the caller of the composed function.
      *
-     * @param <R1>   the type of output of the {@code after} function, and of the
+     * @param <R1>  the type of output of the {@code after} function, and of the
      *              composed function
      * @param after the function to apply after this function is applied
      * @return a composed function that first applies this function and then
@@ -145,7 +145,7 @@ public interface Function2<T1, T2, R> extends BiFunction<T1, T2, R> {
     default Function2<T1, T2, Result<R>> lift() {
         return (t1, t2) -> {
             try {
-                return Result.successOrEmpty(apply(t1, t2));
+                return Result.success(apply(t1, t2));
             } catch (Exception e) {
                 return Result.failure(e);
             }

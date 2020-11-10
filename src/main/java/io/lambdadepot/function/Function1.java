@@ -133,7 +133,7 @@ public interface Function1<T1, R> extends Function<T1, R> {
     default Function1<T1, Result<R>> lift() {
         return t1 -> {
             try {
-                return Result.successOrEmpty(apply(t1));
+                return Result.success(apply(t1));
             } catch (Exception e) {
                 return Result.failure(e);
             }

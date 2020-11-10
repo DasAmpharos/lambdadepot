@@ -38,10 +38,10 @@ public interface Predicate4<T1, T2, T3, T4> {
      * Gets a method reference/lambda expression as a Predicate4 instance.
      *
      * @param reference Predicate reference
-     * @param <T1>       the type of the input to the predicate
-     * @param <T2>       the type of the second argument to the predicate
-     * @param <T3>       the type of the third argument to the predicate
-     * @param <T4>       the type of the fourth argument to the predicate
+     * @param <T1>      the type of the input to the predicate
+     * @param <T2>      the type of the second argument to the predicate
+     * @param <T3>      the type of the third argument to the predicate
+     * @param <T4>      the type of the fourth argument to the predicate
      * @return method reference/lambda expression as a Predicate4 instance
      * @throws NullPointerException if reference is null
      */

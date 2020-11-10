@@ -40,10 +40,10 @@ public interface Consumer4<T1, T2, T3, T4> {
      * Gets a method reference/lambda expression as a Consumer3 instance.
      *
      * @param reference Consumer reference
-     * @param <T1>       the type of the first input to the operation
-     * @param <T2>       the type of the second input to the operation
-     * @param <T3>       the type of the third input to the operation
-     * @param <T4>       the type of the fourth input
+     * @param <T1>      the type of the first input to the operation
+     * @param <T2>      the type of the second input to the operation
+     * @param <T3>      the type of the third input to the operation
+     * @param <T4>      the type of the fourth input
      * @return method reference/lambda expression as a Consumer3 instance
      * @throws NullPointerException if reference is null
      */

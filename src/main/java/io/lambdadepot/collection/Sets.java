@@ -16,12 +16,11 @@
 
 package io.lambdadepot.collection;
 
-import io.lambdadepot.function.Function1;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * A collection of methods to assist operating on {@link java.util.Set}s
@@ -42,14 +41,12 @@ public final class Sets {
      * @param <R>    result type
      * @return {@link Set} of mapped result type
      */
-    public static <T, R> Function1<Set<T>, Set<R>> map(Function<? super T, ? extends R> mapper) {
+    public static <T, R> Set<R> map(Set<T> set, Function<? super T, ? extends R> mapper) {
+        Objects.requireNonNull(set, "set");
         Objects.requireNonNull(mapper, "mapper");
-        return set -> {
-            Objects.requireNonNull(set, "set");
-            return set.stream()
-                .map(mapper)
-                .collect(Collectors.toSet());
-        };
+        final Set<R> newSet = new HashSet<>(set.size());
+        set.forEach(it -> newSet.add(mapper.apply(it)));
+        return newSet;
     }
 
     /**
@@ -62,15 +59,12 @@ public final class Sets {
      * @param <R>    result type
      * @return {@link Set} of mapped result type
      */
-    public static <T, R> Function1<Set<T>, Set<R>> flatMap(Function<? super T, Set<? extends R>> mapper) {
+    public static <T, R> Set<R> flatMap(Set<T> set, Function<? super T, Set<? extends R>> mapper) {
+        Objects.requireNonNull(set, "set");
         Objects.requireNonNull(mapper, "mapper");
-        return set -> {
-            Objects.requireNonNull(set, "set");
-            return set.stream()
-                .map(mapper)
-                .flatMap(Set::stream)
-                .collect(Collectors.toSet());
-        };
+        final Set<R> newSet = new HashSet<>();
+        set.forEach(it -> newSet.addAll(mapper.apply(it)));
+        return newSet;
     }
 
     /**
@@ -82,10 +76,15 @@ public final class Sets {
      * @param <T>       element type of the set
      * @return set containing only the elements that match the provided predicate
      */
-    public static <T> Function1<Set<T>, Set<T>> filter(Predicate<? super T> predicate) {
+    public static <T> Set<T> filter(Set<T> set, Predicate<? super T> predicate) {
+        Objects.requireNonNull(set, "set");
         Objects.requireNonNull(predicate, "predicate");
-        return set -> Objects.requireNonNull(set, "set").stream()
-            .filter(predicate)
-            .collect(Collectors.toSet());
+        final HashSet<T> newSet = new HashSet<>(set.size());
+        set.forEach(it -> {
+            if (predicate.test(it)) {
+                newSet.add(it);
+            }
+        });
+        return newSet;
     }
 }

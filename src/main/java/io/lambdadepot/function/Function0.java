@@ -97,7 +97,7 @@ public interface Function0<R> extends Supplier<R> {
      * If evaluation of either function throws an exception, it is relayed to
      * the caller of the composed function.
      *
-     * @param <R1>   the type of output of the {@code after} function, and of the
+     * @param <R1>  the type of output of the {@code after} function, and of the
      *              composed function
      * @param after the function to apply after this function is applied
      * @return a composed function that first applies this function and then
@@ -118,7 +118,7 @@ public interface Function0<R> extends Supplier<R> {
     default Function0<Result<R>> lift() {
         return () -> {
             try {
-                return Result.successOrEmpty(apply());
+                return Result.success(apply());
             } catch (Exception e) {
                 return Result.failure(e);
             }

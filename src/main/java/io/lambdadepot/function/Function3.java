@@ -148,7 +148,7 @@ public interface Function3<T1, T2, T3, R> {
     default Function3<T1, T2, T3, Result<R>> lift() {
         return (t1, t2, t3) -> {
             try {
-                return Result.successOrEmpty(apply(t1, t2, t3));
+                return Result.success(apply(t1, t2, t3));
             } catch (Exception e) {
                 return Result.failure(e);
             }
