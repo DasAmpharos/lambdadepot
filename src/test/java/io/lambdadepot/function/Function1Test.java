@@ -64,9 +64,9 @@ class Function1Test {
     @Test
     void testAndThen() {
         assertEquals("DLROW ,OLLEH", Function1.of(TestFunctions::toUpperCase)
-            .andThen(TestFunctions::reverse)
+            .thenApply(TestFunctions::reverse)
             .apply("hello, world"));
-        assertThrows(NullPointerException.class, () -> Function1.of(TestFunctions::toUpperCase).andThen(null));
+        assertThrows(NullPointerException.class, () -> Function1.of(TestFunctions::toUpperCase).thenApply(null));
     }
 
     @Test

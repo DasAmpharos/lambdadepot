@@ -69,13 +69,13 @@ class Consumer4Test extends ConsumerBaseTest {
         assertEquals("", outContent.toString());
         assertEquals("", errContent.toString());
         Consumer4.of(TestConsumers::printOut3)
-                .andThen(TestConsumers::printErr3)
+                .thenAccept(TestConsumers::printErr3)
                 .accept("hello, %s, %s and %s", "A", "B", "C");
         assertEquals("hello, A, B and C", outContent.toString());
         assertEquals("hello, A, B and C", errContent.toString());
 
         assertThrows(NullPointerException.class, () -> Consumer4.of(TestConsumers::printOut3)
-                .andThen(null));
+                .thenAccept(null));
     }
 
     @Test

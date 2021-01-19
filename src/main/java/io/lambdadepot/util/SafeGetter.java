@@ -20,6 +20,8 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+import io.lambdadepot.function.Function1;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -53,7 +55,7 @@ public final class SafeGetter<I, O> {
      * @throws NullPointerException if {@code type} is null
      */
     @NonNull
-    public static <T> SafeGetter<T, T> of(Class<T> type) {
+    public static <T> SafeGetter<T, T> of(@NonNull Class<T> type) {
         Objects.requireNonNull(type, "type");
         return new SafeGetter<>(Option::ofNullable);
     }

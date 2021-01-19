@@ -17,6 +17,7 @@
 package io.lambdadepot.function;
 
 import io.lambdadepot.util.Result;
+
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -64,6 +65,9 @@ public interface Function1<T1, R> extends Function<T1, R> {
         return function::apply;
     }
 
+    @Override
+    R apply(T1 t1);
+
     /**
      * A partial application of {@code t1} to the function.
      *
@@ -85,26 +89,6 @@ public interface Function1<T1, R> extends Function<T1, R> {
     }
 
     /**
-     * Returns a composed function that first applies the {@code before}
-     * function to its input, and then applies this function to the result.
-     * If evaluation of either function throws an exception, it is relayed to
-     * the caller of the composed function.
-     *
-     * @param <T2>   the type of input to the {@code before} function, and to the
-     *               composed function
-     * @param before the function to apply before this function is applied
-     * @return a composed function that first applies the {@code before}
-     * function and then applies this function
-     * @throws NullPointerException if before is null
-     * @see #andThen(Function)
-     */
-    @Override
-    default <T2> Function1<T2, R> compose(Function<? super T2, ? extends T1> before) {
-        Objects.requireNonNull(before, "before");
-        return t2 -> apply(before.apply(t2));
-    }
-
-    /**
      * Returns a composed function that first applies this function to
      * its input, and then applies the {@code after} function to the result.
      * If evaluation of either function throws an exception, it is relayed to
@@ -116,10 +100,8 @@ public interface Function1<T1, R> extends Function<T1, R> {
      * @return a composed function that first applies this function and then
      * applies the {@code after} function
      * @throws NullPointerException if after is null
-     * @see #compose(Function)
      */
-    @Override
-    default <R1> Function1<T1, R1> andThen(Function<? super R, ? extends R1> after) {
+    default <R1> Function1<T1, R1> thenApply(Function<? super R, ? extends R1> after) {
         Objects.requireNonNull(after, "after");
         return t1 -> after.apply(apply(t1));
     }
@@ -138,5 +120,9 @@ public interface Function1<T1, R> extends Function<T1, R> {
                 return Result.failure(e);
             }
         };
+    }
+
+    default Function<T1, R> toFunction() {
+        return this::apply;
     }
 }

@@ -9,3 +9,7 @@ fun <R> runCatching(block: () -> R): Result<R> {
         Result.failure(e)
     }
 }
+
+fun test(arr: Array<String>) {
+    arr.iterator()
+}

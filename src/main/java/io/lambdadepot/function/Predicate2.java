@@ -33,7 +33,7 @@ import java.util.function.BiPredicate;
  * @see Predicate1
  */
 @FunctionalInterface
-public interface Predicate2<T1, T2> extends BiPredicate<T1, T2> {
+public interface Predicate2<T1, T2> {
 
     /**
      * Gets a method reference/lambda expression as a Predicate2 instance.
@@ -64,6 +64,8 @@ public interface Predicate2<T1, T2> extends BiPredicate<T1, T2> {
         Objects.requireNonNull(predicate, "predicate");
         return predicate::test;
     }
+
+    boolean test(T1 t1, T2 t2);
 
     /**
      * A partial application of {@code t1} to the predicate.
@@ -102,7 +104,6 @@ public interface Predicate2<T1, T2> extends BiPredicate<T1, T2> {
      * AND of this predicate and the {@code other} predicate
      * @throws NullPointerException if other is null
      */
-    @Override
     default Predicate2<T1, T2> and(BiPredicate<? super T1, ? super T2> other) {
         Objects.requireNonNull(other, "other");
         return (t1, t2) -> test(t1, t2) && other.test(t1, t2);
@@ -115,7 +116,6 @@ public interface Predicate2<T1, T2> extends BiPredicate<T1, T2> {
      * @return a predicate that represents the logical negation of this
      * predicate
      */
-    @Override
     default Predicate2<T1, T2> negate() {
         return (t1, t2) -> !test(t1, t2);
     }
@@ -136,7 +136,6 @@ public interface Predicate2<T1, T2> extends BiPredicate<T1, T2> {
      * OR of this predicate and the {@code other} predicate
      * @throws NullPointerException if other is null
      */
-    @Override
     default Predicate2<T1, T2> or(BiPredicate<? super T1, ? super T2> other) {
         Objects.requireNonNull(other, "other");
         return (t1, t2) -> test(t1, t2) || other.test(t1, t2);
@@ -151,5 +150,9 @@ public interface Predicate2<T1, T2> extends BiPredicate<T1, T2> {
      */
     default Predicate2<T2, T1> reverse() {
         return (t2, t1) -> test(t1, t2);
+    }
+
+    default BiPredicate<T1, T2> toBiPredicate() {
+        return this::test;
     }
 }

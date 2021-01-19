@@ -17,11 +17,12 @@
 package io.lambdadepot.collection;
 
 import io.lambdadepot.util.Option;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A collection of methods to assist operating on {@link java.util.Map}s
@@ -48,10 +49,12 @@ public final class Maps {
         Objects.requireNonNull(map, "map");
         Objects.requireNonNull(key, "key");
         Objects.requireNonNull(valueSupplier, "valueSupplier");
-        if (!map.containsKey(key)) {
-            map.put(key, valueSupplier.get());
+        if (map.containsKey(key)) {
+            return map.get(key);
         }
-        return map.get(key);
+        V value = valueSupplier.get();
+        map.put(key, value);
+        return value;
     }
 
     /**

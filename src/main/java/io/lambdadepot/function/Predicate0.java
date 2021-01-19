@@ -29,7 +29,7 @@ import java.util.function.Supplier;
  * @see Predicate1
  */
 @FunctionalInterface
-public interface Predicate0 extends Supplier<Boolean> {
+public interface Predicate0 {
 
     /**
      * Gets a method reference/lambda expression as a Predicate0 instance.
@@ -55,17 +55,6 @@ public interface Predicate0 extends Supplier<Boolean> {
     static Predicate0 asPredicate0(Supplier<Boolean> supplier) {
         Objects.requireNonNull(supplier, "supplier");
         return supplier::get;
-    }
-
-    /**
-     * Gets the result.
-     *
-     * @return result of {@link #test()}
-     * @see #test()
-     */
-    @Override
-    default Boolean get() {
-        return test();
     }
 
     /**

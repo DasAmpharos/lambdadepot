@@ -17,6 +17,7 @@
 package io.lambdadepot.function;
 
 import io.lambdadepot.util.Result;
+
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -69,6 +70,9 @@ public interface Function2<T1, T2, R> extends BiFunction<T1, T2, R> {
         Objects.requireNonNull(function, "function");
         return function::apply;
     }
+
+    @Override
+    R apply(T1 t1, T2 t2);
 
     /**
      * A partial application of the first argument to the function.
@@ -130,8 +134,7 @@ public interface Function2<T1, T2, R> extends BiFunction<T1, T2, R> {
      * applies the {@code after} function
      * @throws NullPointerException if after is null
      */
-    @Override
-    default <R1> Function2<T1, T2, R1> andThen(Function<? super R, ? extends R1> after) {
+    default <R1> Function2<T1, T2, R1> thenApply(Function<? super R, ? extends R1> after) {
         Objects.requireNonNull(after, "after");
         return (t1, t2) -> after.apply(apply(t1, t2));
     }
@@ -150,5 +153,9 @@ public interface Function2<T1, T2, R> extends BiFunction<T1, T2, R> {
                 return Result.failure(e);
             }
         };
+    }
+
+    default BiFunction<T1, T2, R> toBiFunction() {
+        return this::apply;
     }
 }

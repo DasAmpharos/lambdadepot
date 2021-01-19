@@ -17,6 +17,8 @@
 package io.lambdadepot.util;
 
 import java.util.function.BiConsumer;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -43,7 +45,7 @@ public final class SafeSetter<I, O, V> {
      * @param getter the getter implementation
      * @param setter the setter implementation
      */
-    SafeSetter(SafeGetter<I, O> getter, BiConsumer<O, V> setter) {
+    SafeSetter(@NonNull SafeGetter<I, O> getter, @NonNull BiConsumer<O, V> setter) {
         this.getter = getter;
         this.setter = setter;
     }

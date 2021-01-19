@@ -54,13 +54,13 @@ class Consumer3Test extends ConsumerBaseTest {
     @Test
     void testAndThen() {
         Consumer3.of(TestConsumers::printOut2)
-                .andThen(TestConsumers::printErr2)
+                .thenAccept(TestConsumers::printErr2)
                 .accept("hello, %s and %s", "world", "goodbye");
         assertEquals("hello, world and goodbye", outContent.toString());
         assertEquals("hello, world and goodbye", errContent.toString());
 
         assertThrows(NullPointerException.class, () -> Consumer3.of(TestConsumers::printOut2)
-                .andThen(null));
+                .thenAccept(null));
     }
 
     @Test

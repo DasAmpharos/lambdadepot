@@ -60,6 +60,8 @@ public interface Predicate1<T1> extends Predicate<T1> {
         return predicate::test;
     }
 
+    boolean test(T1 t1);
+
     /**
      * A partial application of {@code t} to the predicate.
      *
@@ -86,7 +88,6 @@ public interface Predicate1<T1> extends Predicate<T1> {
      * AND of this predicate and the {@code other} predicate
      * @throws NullPointerException if other is null
      */
-    @Override
     default Predicate1<T1> and(Predicate<? super T1> other) {
         Objects.requireNonNull(other, "other");
         return t1 -> test(t1) && other.test(t1);
@@ -99,7 +100,6 @@ public interface Predicate1<T1> extends Predicate<T1> {
      * @return a predicate that represents the logical negation of this
      * predicate
      */
-    @Override
     default Predicate1<T1> negate() {
         return t1 -> !test(t1);
     }
@@ -120,9 +120,12 @@ public interface Predicate1<T1> extends Predicate<T1> {
      * OR of this predicate and the {@code other} predicate
      * @throws NullPointerException if other is null
      */
-    @Override
     default Predicate1<T1> or(Predicate<? super T1> other) {
         Objects.requireNonNull(other, "other");
         return t1 -> test(t1) || other.test(t1);
+    }
+
+    default Predicate<T1> toPredicate() {
+        return this::test;
     }
 }

@@ -84,11 +84,11 @@ class Function3Test {
     @Test
     void testAndThen() {
         assertEquals("ABC", Function3.of(TestFunctions::concat3)
-                .andThen(TestFunctions::toUpperCase)
+                .thenApply(TestFunctions::toUpperCase)
                 .apply("A", "B", "C"));
         assertThrows(NullPointerException.class, () ->
                 Function3.of(TestFunctions::concat3)
-                        .andThen(null));
+                        .thenApply(null));
     }
 
     @Test

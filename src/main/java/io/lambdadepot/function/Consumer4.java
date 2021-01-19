@@ -120,7 +120,7 @@ public interface Consumer4<T1, T2, T3, T4> {
      * operation followed by the {@code after} operation
      * @throws NullPointerException if {@code after} is null
      */
-    default Consumer4<T1, T2, T3, T4> andThen(Consumer4<? super T1, ? super T2, ? super T3, ? super T4> after) {
+    default Consumer4<T1, T2, T3, T4> thenAccept(Consumer4<? super T1, ? super T2, ? super T3, ? super T4> after) {
         Objects.requireNonNull(after, "after");
         return (t1, t2, t3, t4) -> {
             accept(t1, t2, t3, t4);

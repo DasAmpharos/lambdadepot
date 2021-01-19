@@ -16,6 +16,9 @@
 
 package io.lambdadepot.util;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
@@ -56,7 +59,8 @@ public abstract class Option<T> {
      * @return an {@code Option} with the value present
      * @throws NullPointerException if value is null
      */
-    public static <T> Option<T> of(T value) {
+    @NonNull
+    public static <T> Option<T> of(@NonNull T value) {
         Objects.requireNonNull(value, "value");
         return new OptionPresent<>(value);
     }
@@ -70,7 +74,8 @@ public abstract class Option<T> {
      * @return an {@code Option} with a present value if the specified value
      * is non-null, otherwise an empty {@code Option}
      */
-    public static <T> Option<T> ofNullable(T value) {
+    @NonNull
+    public static <T> Option<T> ofNullable(@Nullable T value) {
         return Objects.nonNull(value) ? of(value) : empty();
     }
 
@@ -86,6 +91,7 @@ public abstract class Option<T> {
      * @param <T> Type empty the non-existent value
      * @return an empty {@code Option}
      */
+    @NonNull
     public static <T> Option<T> empty() {
         return (Option<T>) OptionEmpty.EMPTY;
     }
@@ -104,7 +110,8 @@ public abstract class Option<T> {
      * Optional's value if Optional is present
      * @throws NullPointerException if optional is null
      */
-    public static <T> Option<T> fromOptional(Optional<T> optional) {
+    @NonNull
+    public static <T> Option<T> fromOptional(@NonNull Optional<T> optional) {
         Objects.requireNonNull(optional, "optional");
         return optional.map(Option::ofNullable)
             .orElseGet(Option::empty);
@@ -120,6 +127,7 @@ public abstract class Option<T> {
      * @return an empty Optional if this Option is empty, a present Optional
      * containing this Option's value if this Option is present
      */
+    @NonNull
     public abstract Optional<T> toOptional();
 
     /**
@@ -134,7 +142,8 @@ public abstract class Option<T> {
      * otherwise an empty {@code Option}
      * @throws NullPointerException if the mapping function is null
      */
-    public abstract <U> Option<U> map(Function<T, U> mapper);
+    @NonNull
+    public abstract <U> Option<U> map(@NonNull Function<T, U> mapper);
 
     /**
      * If a value is present, apply the provided {@code Option}-bearing
@@ -153,7 +162,8 @@ public abstract class Option<T> {
      * @throws NullPointerException if the mapping function is null or returns
      *                              a null result
      */
-    public abstract <U> Option<U> flatMap(Function<T, Option<U>> mapper);
+    @NonNull
+    public abstract <U> Option<U> flatMap(@NonNull Function<T, Option<U>> mapper);
 
     /**
      * Transforms the {@code Option} according to the given transformation
@@ -163,7 +173,8 @@ public abstract class Option<T> {
      * @param <O>         the output type
      * @return the result of transforming the {@code Option}
      */
-    public <O> O transform(Function<Option<T>, O> transformer) {
+    @NonNull
+    public <O> O transform(@NonNull Function<Option<T>, O> transformer) {
         Objects.requireNonNull(transformer, "transformer");
         return transformer.apply(this);
     }
@@ -179,7 +190,8 @@ public abstract class Option<T> {
      * otherwise an empty {@code Option}
      * @throws NullPointerException if the predicate is null
      */
-    public abstract Option<T> filter(Predicate<T> predicate);
+    @NonNull
+    public abstract Option<T> filter(@NonNull Predicate<T> predicate);
 
     /**
      * If a value is present, invoke the specified consumer with the value,
@@ -189,7 +201,7 @@ public abstract class Option<T> {
      * @throws NullPointerException if value is present and {@code consumer} is
      *                              null
      */
-    public abstract void ifPresent(Consumer<T> consumer);
+    public abstract void ifPresent(@NonNull Consumer<T> consumer);
 
     /**
      * If a value is present, invoke {@code presentConsumer} with the value,
@@ -202,7 +214,7 @@ public abstract class Option<T> {
      * @throws NullPointerException if value is not present and {@code whenEmpty}
      *                              is null
      */
-    public abstract void ifPresentOrElse(Consumer<T> whenPresent, Runnable whenEmpty);
+    public abstract void ifPresentOrElse(@NonNull Consumer<T> whenPresent, @NonNull Runnable whenEmpty);
 
     /**
      * If a value is not present, invoke the specified consumer, otherwise
@@ -212,7 +224,7 @@ public abstract class Option<T> {
      * @throws NullPointerException if value is not present and {@code whenEmpty} is
      *                              null
      */
-    public abstract void ifEmpty(Runnable whenEmpty);
+    public abstract void ifEmpty(@NonNull Runnable whenEmpty);
 
     /**
      * If a value is present, invoke the specified consumer with the value,
@@ -223,7 +235,8 @@ public abstract class Option<T> {
      * @throws NullPointerException if value is present and {@code consumer} is
      *                              null
      */
-    public abstract Option<T> peekIfPresent(Consumer<? super T> consumer);
+    @NonNull
+    public abstract Option<T> peekIfPresent(@NonNull Consumer<? super T> consumer);
 
     /**
      * If a value is present, invoke {@code presentConsumer} with the value,
@@ -237,7 +250,8 @@ public abstract class Option<T> {
      * @throws NullPointerException if value is not present and {@code whenEmpty}
      *                              is null
      */
-    public abstract Option<T> peekIfPresentOrElse(Consumer<? super T> whenPresent, Runnable whenEmpty);
+    @NonNull
+    public abstract Option<T> peekIfPresentOrElse(@NonNull Consumer<? super T> whenPresent, @NonNull Runnable whenEmpty);
 
     /**
      * If a value is not present, invoke the specified consumer, otherwise
@@ -248,7 +262,8 @@ public abstract class Option<T> {
      * @throws NullPointerException if value is not present and {@code whenEmpty} is
      *                              null
      */
-    public abstract Option<T> peekIfEmpty(Runnable whenEmpty);
+    @NonNull
+    public abstract Option<T> peekIfEmpty(@NonNull Runnable whenEmpty);
 
     /**
      * Return {@code true} if there is a value present, otherwise {@code false}.
@@ -270,6 +285,7 @@ public abstract class Option<T> {
      *
      * @return the optional value as a {@link Stream}
      */
+    @NonNull
     public abstract Stream<T> stream();
 
     /**
@@ -280,6 +296,7 @@ public abstract class Option<T> {
      * @throws NoSuchElementException if there is no value present
      * @see Option#isPresent()
      */
+    @NonNull
     public abstract T get();
 
     /**
@@ -289,7 +306,8 @@ public abstract class Option<T> {
      *              be null
      * @return the value, if present, otherwise {@code other}
      */
-    public abstract T getOrElse(T other);
+    @Nullable
+    public abstract T getOrElse(@Nullable T other);
 
     /**
      * Return the value if present, otherwise invoke {@code other} and return
@@ -301,12 +319,13 @@ public abstract class Option<T> {
      * @throws NullPointerException if value is not present and {@code other} is
      *                              null
      */
-    public abstract T getOrElse(Supplier<? extends T> other);
+    @Nullable
+    public abstract T getOrElse(@NonNull Supplier<? extends T> other);
 
     /**
-     *
      * @return
      */
+    @Nullable
     public abstract T getOrNull();
 
     /**
@@ -321,19 +340,20 @@ public abstract class Option<T> {
      * @throws NullPointerException if no value is present and
      *                              {@code exceptionSupplier} is null
      */
+    @NonNull
     public abstract <X extends Throwable> T getOrElseThrow(Supplier<? extends X> exceptionSupplier) throws X;
 
     /**
-     *
      * @param other
      * @return
      */
+    @NonNull
     public abstract Option<T> orElse(Option<? extends T> other);
 
     /**
-     *
      * @param other
      * @return
      */
+    @NonNull
     public abstract Option<T> orElse(Supplier<? extends Option<? extends T>> other);
 }

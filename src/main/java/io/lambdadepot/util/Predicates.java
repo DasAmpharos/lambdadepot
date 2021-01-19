@@ -409,7 +409,7 @@ public final class Predicates {
      * @param extractor the {@code Function1} instance used to map {@code T} to {@code U}
      * @param predicate the {@code Predicate1} instance to test {@code T} against
      * @param <T1>      the input type
-     * @param <T2>      the extracted property type to test
+     * @param <R>      the extracted property type to test
      * @return a {@code Predicate1} instance that extracts a property from {@code T} and tests the
      * extracted property against the given predicate.
      * @throws NullPointerException if {@code extractor} is null
@@ -417,7 +417,7 @@ public final class Predicates {
      * @deprecated use {@link #testPropertyOrElse(Function1, Predicate1, boolean)} for clarity
      */
     @Deprecated
-    public static <T1, T2> Predicate1<T1> testProperty(Function1<T1, T2> extractor, Predicate1<T2> predicate) {
+    public static <T1, R> Predicate1<T1> testProperty(Function1<T1, R> extractor, Predicate1<R> predicate) {
         Objects.requireNonNull(extractor, "extractor");
         Objects.requireNonNull(predicate, "predicate");
         return testProperty(SafeGetter.of(extractor), predicate);

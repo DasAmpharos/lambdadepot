@@ -134,7 +134,7 @@ public interface Function3<T1, T2, T3, R> {
      * applies the {@code after} function
      * @throws NullPointerException if after is null
      */
-    default <R1> Function3<T1, T2, T3, R1> andThen(Function<? super R, ? extends R1> after) {
+    default <R1> Function3<T1, T2, T3, R1> thenApply(Function<? super R, ? extends R1> after) {
         Objects.requireNonNull(after, "after");
         return (t1, t2, t3) -> after.apply(apply(t1, t2, t3));
     }

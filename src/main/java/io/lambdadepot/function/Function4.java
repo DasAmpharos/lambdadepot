@@ -150,7 +150,7 @@ public interface Function4<T1, T2, T3, T4, R> {
      * applies the {@code after} function
      * @throws NullPointerException if after is null
      */
-    default <X> Function4<T1, T2, T3, T4, X> andThen(Function<R, X> after) {
+    default <X> Function4<T1, T2, T3, T4, X> thenApply(Function<R, X> after) {
         Objects.requireNonNull(after, "after");
         return (t1, t2, t3, t4) -> after.apply(apply(t1, t2, t3, t4));
     }

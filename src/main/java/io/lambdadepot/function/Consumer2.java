@@ -35,7 +35,7 @@ import java.util.function.BiConsumer;
  * @see Consumer1
  */
 @FunctionalInterface
-public interface Consumer2<T1, T2> extends BiConsumer<T1, T2> {
+public interface Consumer2<T1, T2> {
 
     /**
      * Gets a method reference/lambda expression as a Consumer2 instance.
@@ -66,6 +66,8 @@ public interface Consumer2<T1, T2> extends BiConsumer<T1, T2> {
         Objects.requireNonNull(consumer, "consumer");
         return consumer::accept;
     }
+
+    void accept(T1 t1, T2 t2);
 
     /**
      * A partial application of {@code t1} to the consumer.
@@ -100,8 +102,7 @@ public interface Consumer2<T1, T2> extends BiConsumer<T1, T2> {
      * operation followed by the {@code after} operation
      * @throws NullPointerException if {@code after} is null
      */
-    @Override
-    default Consumer2<T1, T2> andThen(BiConsumer<? super T1, ? super T2> after) {
+    default Consumer2<T1, T2> thenAccept(Consumer2<? super T1, ? super T2> after) {
         Objects.requireNonNull(after, "after");
         return (t1, t2) -> {
             accept(t1, t2);
@@ -118,5 +119,9 @@ public interface Consumer2<T1, T2> extends BiConsumer<T1, T2> {
      */
     default Consumer2<T2, T1> reverse() {
         return (t2, t1) -> accept(t1, t2);
+    }
+
+    default BiConsumer<T1, T2> toBiConsumer() {
+        return this::accept;
     }
 }

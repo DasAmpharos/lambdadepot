@@ -32,7 +32,7 @@ import java.util.function.Supplier;
  * @see Function1
  */
 @FunctionalInterface
-public interface Function0<R> extends Supplier<R> {
+public interface Function0<R> {
 
     /**
      * Gets method reference/lambda as a Function0 instance.
@@ -71,17 +71,6 @@ public interface Function0<R> extends Supplier<R> {
      */
     static <R> Function0<R> just(R value) {
         return () -> value;
-    }
-
-    /**
-     * Gets the result.
-     *
-     * @return result of {@link #apply()}
-     * @see #apply()
-     */
-    @Override
-    default R get() {
-        return apply();
     }
 
     /**

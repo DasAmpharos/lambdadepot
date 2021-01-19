@@ -16,9 +16,10 @@
 
 package io.lambdadepot.function;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 import java.util.Objects;
 import java.util.function.Consumer;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Represents an operation that accepts a single input argument and returns no
@@ -33,7 +34,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * @param <T1> the type of the input to the operation
  */
 @FunctionalInterface
-public interface Consumer1<T1> extends Consumer<T1> {
+public interface Consumer1<T1> {
 
     /**
      * Gets a method reference/lambda expression as a Consumer1 instance.
@@ -64,6 +65,8 @@ public interface Consumer1<T1> extends Consumer<T1> {
         return consumer::accept;
     }
 
+    void accept(T1 t1);
+
     /**
      * A partial application of {@code t1} to the consumer.
      *
@@ -87,12 +90,15 @@ public interface Consumer1<T1> extends Consumer<T1> {
      * @throws NullPointerException if {@code after} is null
      */
     @NonNull
-    @Override
-    default Consumer1<T1> andThen(@NonNull Consumer<? super T1> after) {
+    default Consumer1<T1> thenAccept(@NonNull Consumer<? super T1> after) {
         Objects.requireNonNull(after, "after");
         return t -> {
             accept(t);
             after.accept(t);
         };
+    }
+
+    default Consumer<T1> toConsumer() {
+        return this::accept;
     }
 }
