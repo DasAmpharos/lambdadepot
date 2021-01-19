@@ -122,7 +122,31 @@ public interface Function1<T1, R> extends Function<T1, R> {
         };
     }
 
-    default Function<T1, R> toFunction() {
-        return this::apply;
+    default Composer<T1, R> compose() {
+        return new Composer<>(this);
+    }
+
+    class Composer<T1, R> {
+        private final Function1<T1, R> function;
+
+        public Composer(Function1<T1, R> function) {
+            this.function = function;
+        }
+
+        public <O> Composer<T1, O> thenApply(Function1<R, O> function) {
+            return new Composer<>(t1 -> function.apply(this.function.apply(t1)));
+        }
+
+        public Consumer1.Composer<T1> thenAccept(Consumer1<R> consumer) {
+            return new Consumer1.Composer<>(t1 -> consumer.accept(function.apply(t1)));
+        }
+
+        public Predicate1.Composer<T1> thenTest(Predicate1<R> predicate) {
+            return new Predicate1.Composer<>(t1 -> predicate.test(function.apply(t1)));
+        }
+
+        public Function1<T1, R> build() {
+            return function;
+        }
     }
 }

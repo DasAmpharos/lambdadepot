@@ -98,7 +98,19 @@ public interface Consumer1<T1> {
         };
     }
 
-    default Consumer<T1> toConsumer() {
-        return this::accept;
+    default Composer<T1> compose() {
+        return new Composer<>(this);
+    }
+
+    class Composer<T1> {
+        private final Consumer1<T1> consumer;
+
+        Composer(Consumer1<T1> consumer) {
+            this.consumer = consumer;
+        }
+
+        public Consumer1<T1> build() {
+            return consumer;
+        }
     }
 }

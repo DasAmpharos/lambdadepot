@@ -17,16 +17,13 @@
 package io.lambdadepot.collection;
 
 import io.lambdadepot.util.Option;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.NonNull;
+
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * A collection of methods to assist operating on {@link java.util.List}s
@@ -52,9 +49,9 @@ public final class Lists {
     public static <T, R> List<R> map(@NonNull List<T> list, @NonNull Function<? super T, ? extends R> mapper) {
         Objects.requireNonNull(list, "list");
         Objects.requireNonNull(mapper, "mapper");
-        final List<R> newList = new ArrayList<>(list.size());
-        list.forEach(it -> newList.add(mapper.apply(it)));
-        return newList;
+        return list.stream()
+            .map(mapper)
+            .collect(Collectors.toList());
     }
 
     /**
@@ -73,9 +70,9 @@ public final class Lists {
     public static <T, R> List<R> flatMap(@NonNull List<T> list, @NonNull Function<? super T, List<? extends R>> mapper) {
         Objects.requireNonNull(list, "list");
         Objects.requireNonNull(mapper, "mapper");
-        final List<R> newList = new LinkedList<>();
-        list.forEach(it -> newList.addAll(mapper.apply(it)));
-        return new ArrayList<>(newList);
+        return list.stream()
+            .flatMap(it -> mapper.apply(it).stream())
+            .collect(Collectors.toList());
     }
 
     /**
@@ -91,13 +88,9 @@ public final class Lists {
     public static <T> List<T> filter(@NonNull List<T> list, @NonNull Predicate<? super T> predicate) {
         Objects.requireNonNull(predicate, "predicate");
         Objects.requireNonNull(list, "list");
-        final LinkedList<T> filtered = new LinkedList<>();
-        list.forEach(it -> {
-            if (predicate.test(it)) {
-                filtered.add(it);
-            }
-        });
-        return new ArrayList<>(filtered);
+        return list.stream()
+            .filter(predicate)
+            .collect(Collectors.toList());
     }
 
     /**

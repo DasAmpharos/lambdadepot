@@ -125,7 +125,23 @@ public interface Predicate1<T1> extends Predicate<T1> {
         return t1 -> test(t1) || other.test(t1);
     }
 
-    default Predicate<T1> toPredicate() {
-        return this::test;
+    class Composer<T1> {
+        private final Predicate1<T1> predicate;
+
+        Composer(Predicate1<T1> predicate) {
+            this.predicate = predicate;
+        }
+
+        public <R> Function1.Composer<T1, R> thenApply(Function1<Boolean, R> function) {
+            return new Function1.Composer<>(t1 -> function.apply(predicate.test(t1)));
+        }
+
+        public Consumer1.Composer<T1> thenAccept(Consumer1<Boolean> consumer) {
+            return new Consumer1.Composer<>(t1 -> consumer.accept(predicate.test(t1)));
+        }
+
+        public Predicate1<T1> build() {
+            return predicate;
+        }
     }
 }

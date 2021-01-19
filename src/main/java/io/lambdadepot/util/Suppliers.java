@@ -16,6 +16,9 @@
 
 package io.lambdadepot.util;
 
+import io.lambdadepot.function.Consumer1;
+import io.lambdadepot.function.Function1;
+
 import java.util.Objects;
 import java.util.function.Supplier;
 

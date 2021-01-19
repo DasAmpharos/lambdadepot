@@ -17,8 +17,8 @@
 package io.lambdadepot.function;
 
 import io.lambdadepot.util.Result;
+
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -73,6 +73,10 @@ public interface Function0<R> {
         return () -> value;
     }
 
+    static <R> Function0.Composer<R> composer(Function0<R> function) {
+        return new Composer<>(function);
+    }
+
     /**
      * Applies this function.
      *
@@ -80,37 +84,37 @@ public interface Function0<R> {
      */
     R apply();
 
-    /**
-     * Returns a composed function that first applies this function to
-     * its input, and then applies the {@code after} function to the result.
-     * If evaluation of either function throws an exception, it is relayed to
-     * the caller of the composed function.
-     *
-     * @param <R1>  the type of output of the {@code after} function, and of the
-     *              composed function
-     * @param after the function to apply after this function is applied
-     * @return a composed function that first applies this function and then
-     * applies the {@code after} function
-     * @throws NullPointerException if after is null
-     */
-    default <R1> Function0<R1> andThen(Function<? super R, ? extends R1> after) {
-        Objects.requireNonNull(after, "after");
-        return () -> after.apply(apply());
-    }
+    class Composer<R> {
+        private final Function0<R> function;
 
-    /**
-     * Internally performs a try/catch on this, and changes the return type to a
-     * {@link Result} wrapper.
-     *
-     * @return {@link Function0} with the return type with a {@link Result} wrapper
-     */
-    default Function0<Result<R>> lift() {
-        return () -> {
-            try {
-                return Result.success(apply());
-            } catch (Exception e) {
-                return Result.failure(e);
-            }
-        };
+        Composer(Function0<R> function) {
+            this.function = function;
+        }
+
+        public <R1> Composer<R1> thenApply(Function1<R, R1> function) {
+            return new Composer<>(() -> function.apply(this.function.apply()));
+        }
+
+        public Consumer0.Composer thenAccept(Consumer1<R> consumer) {
+            return new Consumer0.Composer(() -> consumer.accept(function.apply()));
+        }
+
+        public Predicate0.Composer thenTest(Predicate1<R> predicate) {
+            return new Predicate0.Composer(() -> predicate.test(function.apply()));
+        }
+
+        public Composer<Result<R>> lift() {
+            return new Composer<>(() -> {
+                try {
+                    return Result.success(function.apply());
+                } catch (Exception e) {
+                    return Result.failure(e);
+                }
+            });
+        }
+
+        public Function0<R> build() {
+            return function;
+        }
     }
 }

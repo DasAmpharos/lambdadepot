@@ -116,4 +116,20 @@ public interface Predicate0 {
         Objects.requireNonNull(other, "other");
         return () -> test() || other.test();
     }
+
+    class Composer {
+        private final Predicate0 predicate;
+
+        Composer(Predicate0 predicate) {
+            this.predicate = predicate;
+        }
+
+        public <R> Function0.Composer<R> thenApply(Function1<Boolean, R> function) {
+            return new Function0.Composer<>(() -> function.apply(predicate.test()));
+        }
+
+        public Predicate0 build() {
+            return predicate;
+        }
+    }
 }

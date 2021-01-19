@@ -16,9 +16,9 @@
 
 package io.lambdadepot.function;
 
-import java.util.Objects;
-import java.util.Optional;
 import org.checkerframework.checker.nullness.qual.NonNull;
+
+import java.util.Objects;
 
 /**
  * Represents an operation that accepts zero input argument and returns no
@@ -71,5 +71,17 @@ public interface Consumer0 {
             accept();
             after.accept();
         };
+    }
+
+    class Composer {
+        private final Consumer0 consumer;
+
+        Composer(Consumer0 consumer) {
+            this.consumer = consumer;
+        }
+
+        public Consumer0 build() {
+            return consumer;
+        }
     }
 }
